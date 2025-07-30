@@ -1,10 +1,16 @@
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(project_root))
+
 from utils.path import get_git_root
+from utils.unzip import unzip
 import requests
-import zipfile
 
 def main():
-    data_dir = get_git_root() / "data" / "raw"
-    data_dir.mkdir(parents=True, exist_ok=True)
+    download_dir = get_git_root() / "data" / "raw"
+    download_dir.mkdir(parents=True, exist_ok=True)
 
     base_url = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action"
 
@@ -23,8 +29,8 @@ def main():
             resource_metadata = requests.get(url).json()
             # print(resource_metadata)
 
-            download_path = data_dir / resource_metadata["result"]["name"]
-            download_path.mkdir(parents=True, exist_ok=True)
+            resource_dir = download_dir / resource_metadata["result"]["name"]
+            resource_dir.mkdir(parents=True, exist_ok=True)
 
             try:
                 resp = requests.get(resource_metadata["result"]["url"], stream=True)
@@ -32,19 +38,16 @@ def main():
                 
                 file_type = "." + resource_metadata["result"]["format"].lower()
                 file_name = resource_metadata["result"]["name"] + file_type
-                with open(download_path/file_name, "wb") as f:
+
+                with open(resource_dir/file_name, "wb") as f:
                     f.write(resp.content)
 
                 if file_type == ".zip":
-                    try:
-                        with zipfile.ZipFile(download_path/file_name, "r") as ref:
-                            ref.extractall(download_path)
-                        print(f"Unzipped: {file_name}")
-                    except zipfile.BadZipFile:
-                        print(f"Failed to unzip the following file: {file_name}")
+                    unzip(resource_dir / file_name, resource_dir)
 
             except requests.exceptions.RequestException as e:
                 print(f"Error downloading file: {e}")
+    print("Downloaded all raw data files")
 
 if __name__ == "__main__":
     main()
