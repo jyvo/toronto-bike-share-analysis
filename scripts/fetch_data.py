@@ -1,9 +1,3 @@
-import sys
-from pathlib import Path
-
-project_root = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(project_root))
-
 from utils.path import get_git_root
 from utils.unzip import unzip
 import requests
