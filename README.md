@@ -39,7 +39,7 @@ To open Jupyter Notebook, simply run:
 ```sh
 jupyter notebook
 ```
-Select the kernel from the dropdown menu prompted or simply change the kernel by clicking on the button left of the hamburger dropdown menu at the top right of any notebook
+Select the kernel from the dropdown menu if prompted or simply change the kernel by clicking on the button left of the hamburger dropdown menu at the top right of any notebook
 
 **Run Files In Virtual Environment**  
 To run a file within the virtual environment, use the following command:
