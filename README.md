@@ -30,8 +30,8 @@ uv pip install -e .
 
 ### Other Commands
 
-**Jupyter Notebook Setup**  
-With the virtual environment active, run the following to register the kernel with Jupyter (name can be replaced)
+**Jupyter Notebook Kernel Setup**  
+With the virtual environment active, run the following to register the environment's kernel with Jupyter (name can be replaced)
 ```sh
 python -m ipykernel install --user --name=tbsa_venv
 ```
@@ -39,14 +39,14 @@ To open Jupyter Notebook, simply run:
 ```sh
 jupyter notebook
 ```
-Select a notebook to open and simply change/select the kernel if not selected by default, located on the top right of the notebook, left of the 3 line dropdown menu
+Select the kernel from the dropdown menu prompted or simply change the kernel by clicking on the button left of the hamburger dropdown menu at the top right of any notebook
 
 **Run Files In Virtual Environment**  
 To run a file within the virtual environment, use the following command:
 ```sh
 uv run <filename>
 ```
-If the command doesn't wor, manually select the relative interpreter or run the command in the bash terminal
+If the command doesn't work, manually select the relative interpreter or run the command in the bash terminal
 
 
 
