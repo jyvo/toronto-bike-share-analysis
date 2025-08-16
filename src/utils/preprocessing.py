@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def normalize_column_names(column_names: pd.Index) -> pd.Index:
     return column_names.str.replace(r'\s+', '_', regex=True).str.lower()
@@ -10,3 +11,26 @@ def calc_trip_duration(df:pd.DataFrame, start_col_name:str, end_col_name:str, in
     start_time = pd.to_datetime(df.loc[index, start_col_name])
     end_time = pd.to_datetime(df.loc[index, end_col_name])
     return (end_time - start_time).dt.total_seconds().astype('int64')
+
+def na_dtype_df(df:pd.DataFrame, name:str, columns:list|set) -> pd.DataFrame:
+    new_entry = pd.DataFrame({'name': [name]})
+    for col in columns:
+        if col in df.columns:
+            new_entry[col] = df[col].isna().sum()
+            new_entry[f'{col}_dtype'] = df[col].dtype
+        else:
+            new_entry[col] = np.nan
+            new_entry[f'{col}_dtype'] = np.nan
+    return new_entry
+
+def get_dtype_cols(df:pd.DataFrame) -> list:
+    return [col for col in df.columns if col.endswith('_dtype')]
+
+def count_col_dtypes(df:pd.DataFrame, summarize_all:bool=False) -> None:
+    dtype_cols = get_dtype_cols(df)
+    for dtype in dtype_cols:
+        val_counts = df[dtype].value_counts()
+        if len(val_counts.tolist()) > 1 or summarize_all:
+            print(val_counts)
+            print()
+    return
