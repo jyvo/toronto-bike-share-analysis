@@ -1,3 +1,4 @@
+from utils.preprocessing import na_dtype_df
 import pandas as pd
 import os
 # from charset_normalizer import from_path
@@ -44,6 +45,12 @@ class Dataset:
     
     def get_name(self) -> str:
         return self._name
+    
+    def get_na_and_dtypes(self, columns):
+        summary_df = pd.DataFrame()
+        for name, df in self._data_files.items():
+            summary_df = pd.concat([summary_df, na_dtype_df(df, name, columns)], axis=0, ignore_index=True)
+        return summary_df
 
 
 class LoadData:
@@ -55,12 +62,19 @@ class LoadData:
     def get_data_dirs(self) -> list[str]:
         return self._data_dirs
     
-    def load_datasets(self, omit:list, prefix:str=None, status_msg:str=True) -> None:
-        for d in self._data_dirs:
-            if d not in omit:
-                self._datasets[d] = Dataset(d, self._root_path / d, prefix)
-                if status_msg:
-                    print(f"Dataset '{d}' loaded.")
+    def load_datasets(self, select:list=[], omit:list=[], prefix:str=None, status_msg:str=True) -> None:
+        if len(select) > 0:
+            for d in self._data_dirs:
+                if d in select and d not in omit:
+                    self._datasets[d] = Dataset(d, self._root_path / d, prefix)
+                    if status_msg:
+                        print(f"Dataset '{d}' loaded.")
+        else:
+            for d in self._data_dirs:
+                if d not in omit:
+                    self._datasets[d] = Dataset(d, self._root_path / d, prefix)
+                    if status_msg:
+                        print(f"Dataset '{d}' loaded.")
         print("All datasets loaded")
 
     def list_datasets(self):
