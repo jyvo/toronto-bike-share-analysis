@@ -12,6 +12,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 TMP_DATA_DIR = DATA_DIR / "temp"
 RT_SNAPSHOT_DIR = DATA_DIR / "snapshot"
+DUCKDB_PATH = DATA_DIR / "warehouse" / "bikeshare.duckdb"
 
 # config API parameters
 CKAN_FEED = "https://ckan0.cf.opendata.inter.prod-toronto.ca/api/3/action"
